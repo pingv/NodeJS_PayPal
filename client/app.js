@@ -38,19 +38,22 @@ window.paypal
       }
     },
     async onApprove(data, actions) {
-        console.log("app.js - onApprove");
+      console.log("app.js - onApprove");
       try {
         //note the ` ` instead of " " - to pass through params into the URL
         /*
             Capture => /server/api/orders/${data.orderID}/capture`
             Authorization => /server/api/orders/${data.orderID}/authorize`
         */
-        const response = await fetch(`/server/api/orders/${data.orderID}/authorize`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `/server/api/orders/${data.orderID}/authorize`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const orderData = await response.json();
         // Three cases to handle:
@@ -91,6 +94,62 @@ window.paypal
         );
       }
     },
+
+    style: {
+      layout: "vertical",
+      color: "gold",
+      shape: "pill",
+      label: "paypal",
+      //tagline: 'true' // applicable only for layout: 'horizontal'
+    },
+
+    onShippingOptionsChange(data) {
+      // data.selectedShippingOption contains the selected shipping option
+      console.log("SELECTED_OPTION", data.selectedShippingOption);
+    },
+
+    onShippingAddressChange(data) {
+      // data.shippingAddress contains the selected shipping address
+      console.log("SHIPPING_ADDRESS", data.shippingAddress);
+    },
+
+    onClick: (data) => {
+      // fundingSource = "venmo"
+      fundingSource = data.fundingSource;
+
+      // Use this value to determine the funding source used to pay
+      // Update your confirmation pages and notifications from "PayPal" to "Venmo"
+      console.log("FUNDING_SOURCE", fundingSource);
+    },
+
+    onCancel: function (data) {
+      // Show a cancel page, or return to cart
+      console.log("CANCEL clicked", data);
+    },
+    
+    // onInit is called when the button first renders
+    onInit: function(data, actions) {
+      // Disable the buttons
+      actions.disable();
+      // Listen for changes to the checkbox
+      document.querySelector('#check')
+        .addEventListener('change', function(event) {
+          // Enable or disable the button when it is checked or unchecked
+          if (event.target.checked) {
+            actions.enable();
+          } else {
+            actions.disable();
+          }
+        });
+    },
+    // onClick is called when the button is clicked
+    onClick: function() {
+      // Show a validation error if the checkbox is not checked
+      if (!document.querySelector('#check').checked) {
+        document.querySelector('#error').classList.remove('hidden');
+      }
+    },
+
   })
   .render("#paypal-button-container");
 
