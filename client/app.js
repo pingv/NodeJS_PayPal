@@ -40,7 +40,12 @@ window.paypal
     async onApprove(data, actions) {
         console.log("app.js - onApprove");
       try {
-        const response = await fetch(`/server/api/orders/${data.orderID}/capture`, {
+        //note the ` ` instead of " " - to pass through params into the URL
+        /*
+            Capture => /server/api/orders/${data.orderID}/capture`
+            Authorization => /server/api/orders/${data.orderID}/authorize`
+        */
+        const response = await fetch(`/server/api/orders/${data.orderID}/authorize`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

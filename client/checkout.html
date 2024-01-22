@@ -8,8 +8,10 @@
   <body>
     <div id="paypal-button-container"></div>
     <p id="result-message"></p>
-    <!-- Replace the "test" client-id value with your client-id -->
-    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <!-- Replace the "test" client-id value with your client-id 
+          Default intent is capture (!) - so not necessary to pass intent if so
+    -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&intent=authorize&currency=USD"></script>
     <script src="app.js"></script>
   </body>
 </html>
